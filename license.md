@@ -37,22 +37,6 @@
 #           ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 #           IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# about:
-#   NvTempMon is written to run as a bash-script specifically for the
-#       Nvidia GTX1060 graphics card driver.  other graphics cards may
-#       have different commands or temp thresholds.  the intention is
-#       to display gpu and cpu temps in a simple to read format, and
-#       will allow continous monitoring of gpu temperature and
-#       automatically shutdown the computer if gpu temperatures near
-#       the max specified.  warnings will be visual text in the
-#       terminal window; and if able, audio through attached speakers.
-#
-# dependencies:
-#   nvidia-smi  -   command included with nvidia driver
-#   to verify, try running 'nvidia-smi' from the terminal.  if properly
-#       installed on your system, you will receive output.  for
-#       'nvidia-smi' support, please check with the driver provider.
-#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 #   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 #   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
