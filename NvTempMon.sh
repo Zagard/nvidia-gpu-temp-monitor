@@ -67,66 +67,66 @@
 #   please submit to https://www.github/zagard/nvidia-gpu-temp-monitor/
 ######################################################################
 
-# global variables
-gpu=$(nvidia-smi -q | grep -io 'gpu current temp.*' | grep -io '[0-9][0-9]')
-gpu2=$(nvidia-smi -q | grep -io 'gpu current temp.*')
-cpu=$(sensors | grep -i package)
-    # error check variables
-        #echo $variablename
+# initialize variables
+loop=true
+infinate_loop=true
+gpu1=""
+gpu2=""
+cpu1=""
 
-# declare functions
-function dstar()
+function set_variables ()
 {
-    echo "*********************************************************"
+gpu2=$(nvidia-smi -q | grep -io 'gpu current temp.*')
+gpu1=${gpu2//[^0-9]/}
+cpu1=$(sensors | grep -i package)
 }
 
 ### MAIN ###
-# checking temperatures to display corresponding messages or perform action
-case $gpu in
-    [0-3][0-9])
-        dstar
-        echo "$gpu2"
-        echo "Status                      : nominal"
-    ;;
-    [4-6][0-9])
-        dstar
-        echo "$gpu2"
-        echo "Status                      : warm"
-    ;;
-    7[0-9]|8[0-4])
-        dstar
-        echo "$gpu2"
-        echo "Status                      : hot"
-    ;;
-    # range is set to warn when 5deg or less of the 90deg range.
-    8[5-9])
-        dstar
-        echo "$gpu2"
-        echo "Status                      : WARNING !!"
-        echo "                              GPU REACHING MAXIMUM TEMP!!"
-        echo "                              WILL SHUTDOWN AT 90c+"
-        ( speaker-test -t sine -f 1000 )& pid=$! ; sleep 0.1s ; kill -9 $pid
-    ;;
-    # range is set to shutdown the computer.  when reaching 90deg or higher,
-    #   this script will shutdown the computer quickly in attempt to reduce
-    #   possible thermal damage to GPU.  shutdown is imediate and user will
-    #   probably not see the output for this range
-    9[0-9])
-        dstar
-        echo "$gpu2"
-        echo "Status                      : GPU TEMP SHUTDOWN!! - 90c+"
-        ( speaker-test -t sine -f 1000 )& pid=$! ; sleep 0.1s ; kill -9 $pid
-        shutdown -P now
-    ;;
-    *)
-        dstar
-        echo "ERROR - \$gpu outside value range"
-    ;;
-esac
-dstar
-echo "CPU:"
-echo "$cpu"
-dstar
+# continue loop while no error
+while [ $loop = true ]
+do
+    # set variables to current values
+    set_variables
+    # checking temperatures to display corresponding messages or perform action
+    case $gpu1 in
+        [0-7][0-9]|8[0-4])
+            echo "GPU:  $gpu2"
+            echo "CPU:  $cpu1"
+        ;;
+        # range is set to warn when 5deg or less of the 90deg range.
+        8[5-9])
+            echo "GPU:  $gpu2"
+            echo "Status                      : WARNING !!"
+            echo "                              GPU REACHING MAXIMUM TEMP!!"
+            echo "                              WILL SHUTDOWN AT 90c+"
+            echo "CPU:  $cpu1"
+            ( speaker-test -t sine -f 1000 )& pid=$! ; sleep 0.1s ; kill -9 $pid
+        ;;
+        # range is set to shutdown the computer.  when reaching 90deg or higher,
+        #   this script will shutdown the computer quickly in attempt to reduce
+        #   possible thermal damage to GPU.  shutdown is imediate and user will
+        #   probably not see the output for this range
+        9[0-9])
+            echo "GPU:  $gpu2"
+            echo "Status                      : GPU TEMP SHUTDOWN!! - 90c+"
+            echo "CPU:  $cpu1"            
+            ( speaker-test -t sine -f 1000 )& pid=$! ; sleep 0.1s ; kill -9 $pid
+            shutdown -P now
+        ;;
+        *)
+            echo "ERROR - \$gpu outside value range"
+            ( speaker-test -t sine -f 1000 )& pid=$! ; sleep 0.1s ; kill -9 $pid
+            loop=false
+        ;;
+    esac
+    # should loop continue
+    if [ $infinate_loop = false ];
+    then
+        loop=false
+    fi
+    sleep 5
+    clear
+done
 
 # exit with error code notification if any
 exit $?
