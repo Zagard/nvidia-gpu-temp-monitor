@@ -26,7 +26,12 @@ A linux bash script to monitor Nvidia gpu temperature, and shutdown if temperatu
             reaches above 85deg, the computer will display a text
             warning, and attempt to beep through the speakers.  if
             the gpu reaches above 90deg, the computer will attempt
-            to shutdown in order to avoid thermal dammage to the gpu.       
+            to shutdown in order to avoid thermal dammage to the gpu.
+   troubleshooting:
+       i have the code in the file, but it will not run?
+            make sure the file is executable.  you can do this by using
+                 'chmod' on the file.
+                 e.g.  user@computer $:  chmod +x NvTempMon.sh
 
  dependencies:
    nvidia-smi  -   command included with nvidia driver
