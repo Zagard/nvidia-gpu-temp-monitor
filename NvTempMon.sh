@@ -78,14 +78,15 @@ function set_variables ()
 {
 gpu2=$(nvidia-smi -q | grep -io 'gpu current temp.*')
 gpu1=${gpu2//[^0-9]/}
-cpu1=$(sensors | grep -i package)
+cpu1=$(sensors | grep -i physical)
 }
 
 ### MAIN ###
 # continue loop while no error
 while [ $loop = true ]
 do
-    # set variables to current values
+    # set variables to current values and clear screen
+    clear
     set_variables
     # checking temperatures to display corresponding messages or perform action
     case $gpu1 in
@@ -115,6 +116,7 @@ do
         ;;
         *)
             echo "ERROR - \$gpu outside value range"
+            echo "\$gpu = $gpu"
             ( speaker-test -t sine -f 1000 )& pid=$! ; sleep 0.1s ; kill -9 $pid
             loop=false
         ;;
@@ -125,7 +127,6 @@ do
         loop=false
     fi
     sleep 5
-    clear
 done
 
 # exit with error code notification if any
