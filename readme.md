@@ -12,14 +12,15 @@ A linux bash script to monitor Nvidia gpu temperature, and shutdown if temperatu
        terminal window; and if able, audio through attached speakers.
  directions:
    installation:
-       to install, place nvtempmon.sh with other command scripts or
+       1.  download file and place nvtempmon.sh with other command scripts or
             directory.
             e.g. /usr/local/bin/     (recomended)
             e.g. /home/user/Desktop/
             e.g. ~/Downloads
-            
+       2.  make the file executable (use gui or chmod from terminal).
+            e.g.     user@computer $:  sudo chmod +x /usr/local/bin/nvtempmon.sh
    execution:
-       open a terminal window, navigate to file if needed, and run.
+       1.  open a terminal window, navigate to file if needed, and run.
             e.g.     user@computer $:  nvtempmon.sh
                           (if stored in - /usr/local/bin/)
                      user@computer $:  ./NvTempMon.sh
