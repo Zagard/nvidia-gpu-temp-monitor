@@ -2,7 +2,7 @@
 A linux bash script to monitor Nvidia gpu temperature, and shutdown if temperature reaches critical.
 
  about:
-   NvTempMon is written to run as a bash-script specifically for the
+   nvtempmon.sh is written to run as a bash-script specifically for the
        Nvidia GTX1060 graphics card driver.  other graphics cards may
        have different commands or temp thresholds.  the intention is
        to display gpu and cpu temps in a simple to read format, and
@@ -12,14 +12,20 @@ A linux bash script to monitor Nvidia gpu temperature, and shutdown if temperatu
        terminal window; and if able, audio through attached speakers.
  directions:
    installation:
-       to install, place NvTempMon.sh to any directory accessible to
-            either the user or system running it.  e.g. the desktop
+       to install, place nvtempmon.sh with other command scripts or
+            directory.
+            e.g. /usr/local/bin/     (recomended)
+            e.g. /home/user/Desktop/
+            e.g. ~/Downloads
+            
    execution:
-       open a terminal window, navigate to file, and run.
-            e.g.     user@computer $:  cd /home/user/Desktop
+       open a terminal window, navigate to file if needed, and run.
+            e.g.     user@computer $:  nvtempmon.sh
+                          (if stored in - /usr/local/bin/)
                      user@computer $:  ./NvTempMon.sh
-                     or
-                     user@computer $:  ./home/user/Desktop/NvTempMon.sh
+                          (if in same directory of file)
+                     user@computer $:  /usr/local/bin/NvTempMon.sh
+                          (use full path from anywhere)
    use:
        if using a linux gui, the terminal window can be resized or
             minimized depending on preference.  if the Nvidia gpu
