@@ -1,7 +1,7 @@
 #! /bin/bash
 
 ######################################################################
-# file name:    NvTempMon
+# file name:    nvtempmon.sh
 # author:       Zagard
 # copyright:    Copyright (c) 2017 Zagard
 # license:      This code is distributed under MIT license, except
@@ -40,7 +40,7 @@
 #           IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 # about:
-#   NvTempMon is written to run as a bash-script specifically for the
+#   nvtempmon.sh is written to run as a bash-script specifically for the
 #       Nvidia GTX1060 graphics card driver.  other graphics cards may
 #       have different commands or temp thresholds.  the intention is
 #       to display gpu and cpu temps in a simple to read format, and
