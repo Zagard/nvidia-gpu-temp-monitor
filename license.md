@@ -1,5 +1,5 @@
 ######################################################################
-# file name:    NvTempMon
+# file name:    nvtempmon.sh
 # author:       Zagard
 # copyright:    Copyright (c) 2017 Zagard
 # license:      This code is distributed under MIT license, except
@@ -45,6 +45,6 @@
 #   CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 #   WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 #
-# bug reports or requests: 
+# bug reports or requests:
 #   please submit to https://www.github/zagard/nvidia-gpu-temp-monitor/
 ######################################################################
