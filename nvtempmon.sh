@@ -1,7 +1,8 @@
 #! /bin/bash
 
+### xterm -T "Nvidia Temp Monitor" -geometry "63x3-0+0" -bg "grey20" -e "nvtempmon.sh" &
 ######################################################################
-# file name:    nvtempmon.sh
+# file name:    NvTempMon
 # author:       Zagard
 # copyright:    Copyright (c) 2017 Zagard
 # license:      This code is distributed under MIT license, except
@@ -40,7 +41,7 @@
 #           IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 # about:
-#   nvtempmon.sh is written to run as a bash-script specifically for the
+#   NvTempMon is written to run as a bash-script specifically for the
 #       Nvidia GTX1060 graphics card driver.  other graphics cards may
 #       have different commands or temp thresholds.  the intention is
 #       to display gpu and cpu temps in a simple to read format, and
@@ -61,7 +62,7 @@
 #   IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
 #   ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
 #   CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-#   WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
+#   WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 # bug reports or requests:
 #   please submit to https://www.github/zagard/nvidia-gpu-temp-monitor/
@@ -69,16 +70,21 @@
 
 # initialize variables
 loop=true
-infinate_loop=true
+infinate_loop=true # false runs program once per call
+shutdown=false
 gpu1=""
 gpu2=""
 cpu1=""
+cpu2=""
+cpu3=""
 
 function set_variables ()
 {
 gpu2=$(nvidia-smi -q | grep -io 'gpu current temp.*')
 gpu1=${gpu2//[^0-9]/}
-cpu1=$(sensors | grep -i physical)
+cpu3=$(sensors | grep -i package)
+cpu2=${cpu3//[^0-9]/}
+cpu1=${cpu2:1:2}
 }
 
 ### MAIN ###
@@ -92,15 +98,13 @@ do
     case $gpu1 in
         [0-7][0-9]|8[0-4])
             echo "GPU:  $gpu2"
-            echo "CPU:  $cpu1"
         ;;
-        # range is set to warn when 5deg or less of the 90deg range.
+        # range is set to warn when 85 to 89 deg.
         8[5-9])
             echo "GPU:  $gpu2"
             echo "Status                      : WARNING !!"
             echo "                              GPU REACHING MAXIMUM TEMP!!"
             echo "                              WILL SHUTDOWN AT 90c+"
-            echo "CPU:  $cpu1"
             ( speaker-test -t sine -f 1000 )& pid=$! ; sleep 0.1s ; kill -9 $pid
         ;;
         # range is set to shutdown the computer.  when reaching 90deg or higher,
@@ -110,17 +114,54 @@ do
         9[0-9])
             echo "GPU:  $gpu2"
             echo "Status                      : GPU TEMP SHUTDOWN!! - 90c+"
-            echo "CPU:  $cpu1"            
             ( speaker-test -t sine -f 1000 )& pid=$! ; sleep 0.1s ; kill -9 $pid
-            shutdown -P now
+            shutdown=true
         ;;
         *)
-            echo "ERROR - \$gpu outside value range"
-            echo "\$gpu = $gpu"
+            echo "ERROR - \$gpu1 outside value range"
+            echo "\$gpu1 = $gpu1"
+            echo "\$gpu2 = $gpu2"
             ( speaker-test -t sine -f 1000 )& pid=$! ; sleep 0.1s ; kill -9 $pid
             loop=false
         ;;
     esac
+    case $cpu1 in
+        [0-5][0-9]|6[0-4])
+            echo "CPU:  $cpu3"
+        ;;
+        # range is set to warn when near critical temp
+        6[5-9])
+            echo "CPU:  $cpu3"
+            echo "Status                      : WARNING !!"
+            echo "                              CPU REACHING MAXIMUM TEMP!!"
+            echo "                              WILL SHUTDOWN AT 70c+"
+            ( speaker-test -t sine -f 1000 )& pid=$! ; sleep 0.1s ; kill -9 $pid
+        ;;
+        # range is set to shutdown the computer.  when reaching critical temp,
+        #   this script will shutdown the computer quickly in attempt to reduce
+        #   possible thermal damage to CPU.  shutdown is imediate and user will
+        #   probably not see the output for this range
+        7[0-9])
+            echo "CPU:  $cpu3"
+            echo "Status                      : CPU TEMP SHUTDOWN!! - 70c+"
+            ( speaker-test -t sine -f 1000 )& pid=$! ; sleep 0.1s ; kill -9 $pid
+            shutdown=true
+        ;;
+        *)
+            echo "ERROR - \$cpu1 outside value range"
+            echo "\$cpu1 = $cpu1"
+            echo "\$cpu2 = $cpu2"
+            echo "\$cpu3 = $cpu3"
+            ( speaker-test -t sine -f 1000 )& pid=$! ; sleep 0.1s ; kill -9 $pid
+            loop=false
+        ;;
+    esac
+    # shutdown system if true condition met
+    if [ $shutdown = true ];
+    then
+        loop=false
+        shutdown -P now
+    fi
     # should loop continue
     if [ $infinate_loop = false ];
     then
